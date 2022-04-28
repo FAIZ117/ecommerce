@@ -106,10 +106,16 @@ function Slider() {
     },[]);
 
     function handleArrowClick(direction){
+        console.log("clicked")
         let maxResult=sliderData.length;
-        if(direction==="left"){
+        /*if(direction==="left"){
             setSliderIndex(sliderIndex>0?sliderIndex-1:maxResult-1)
             }else{
+            setSliderIndex(sliderIndex<maxResult-1?sliderIndex+1:0) 
+            }*/
+        if(direction==="left"&&sliderIndex>0){
+            setSliderIndex(sliderIndex>0?sliderIndex-1:maxResult-1)
+            }else if(direction==="right"&&sliderIndex<maxResult-1){
             setSliderIndex(sliderIndex<maxResult-1?sliderIndex+1:0) 
             }
     };
@@ -118,7 +124,7 @@ function Slider() {
   return (
     <Container>
         
-        <Arrow direction="left" onClick={()=>handleArrowClick("left")}>
+        <Arrow direction="left" onClick={()=>handleArrowClick("left")} style={sliderIndex<1?{pointerEvents:"none"}:{pointerEvents:""}}>
             <ArrowBackIosNewOutlinedIcon/>
         </Arrow>
         <Wrapper slideIndex={sliderIndex}>
@@ -129,15 +135,15 @@ function Slider() {
                             <Image src={element.image} />
                         </ImgContainer>
                         <InfoContainer>
-                            <Title>{(element.title).slice(0,10)}</Title>
+                            <Title>{(element.title).slice(0,12)}</Title>
                             <Description>{element.description.slice(0,70)}</Description>
-                            <Button>Submit</Button>
+                            <Button>Shop Now</Button>
                         </InfoContainer>
                     </Slide> 
                 </>
             })}  
         </Wrapper>
-        <Arrow direction="right" onClick={()=>handleArrowClick("right")}>
+        <Arrow direction="right" onClick={()=>handleArrowClick("right")} style={sliderIndex>=sliderData.length-1?{pointerEvents:"none"}:{pointerEvents:""}} >
             <ArrowForwardIosOutlinedIcon/>
         </Arrow>
     </Container>
