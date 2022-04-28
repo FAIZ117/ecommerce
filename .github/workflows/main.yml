@@ -1,0 +1,17 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.708e9ea7-eba7-4d70-9db4-65abc2ad3175}}
+          heroku_app_name: "emart-demo" #Must be unique in Heroku
+          heroku_email: "fhjami@gmail.com"
