@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import styled from "styled-components"
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
@@ -11,7 +11,6 @@ const Container=styled.div`
     background-color:coral;
     position:relative;
     overflow:hidden;
-
 `
 const Arrow=styled.div`
     width:50px;
@@ -37,7 +36,8 @@ const Arrow=styled.div`
 const Wrapper=styled.div`
     display:flex;
     height:100%;
-    transform:translatex(0vw);
+    transition: all 1.5s ease;
+    transform:translatex(${props=>props.slideIndex*-100}vw);
 `
 const Slide=styled.div`
     display:flex;
@@ -61,13 +61,14 @@ const Image=styled.img`
 const InfoContainer=styled.div`
     flex:1;
     position:absolute;
-    right:30%;
+    left:35%;
 
     
 `
 const Title = styled.h1`
   font-size: 70px;
-  color:#d8db74;
+  color:black;
+  padding:0;
 `;
 
 const Description = styled.p`
@@ -75,7 +76,8 @@ const Description = styled.p`
   font-size: 20px;
   font-weight: 500;
   letter-spacing: 3px;
-  color:#a6a85b;
+  color:black;
+  padding:0;
 `;
 
 const Button = styled.button`
@@ -83,52 +85,59 @@ const Button = styled.button`
   font-size: 20px;
   background-color: transparent;
   cursor: pointer;
-  color:#d8db74;
+  color:black;
+  padding:0;
 `;
 
 
-
-
-
 function Slider() {
+    const [sliderIndex,setSliderIndex]=useState(0)
+    const[sliderData,setSliderData]=useState([])
+    const[loading,setLoading]=useState(false)
+    async function getItemList(){
+        setLoading(false) 
+        fetch('https://fakestoreapi.com/products?limit=6')
+            .then(res=>res.json())
+            .then(json=>setSliderData(json))
+        setLoading(true)
+    };
+    useEffect(()=>{
+        getItemList()
+    },[]);
+
+    function handleArrowClick(direction){
+        let maxResult=sliderData.length;
+        if(direction==="left"){
+            setSliderIndex(sliderIndex>0?sliderIndex-1:maxResult-1)
+            }else{
+            setSliderIndex(sliderIndex<maxResult-1?sliderIndex+1:0) 
+            }
+    };
+
+
   return (
     <Container>
-        <Arrow direction="left">
+        
+        <Arrow direction="left" onClick={()=>handleArrowClick("left")}>
             <ArrowBackIosNewOutlinedIcon/>
         </Arrow>
-        <Wrapper>
-            <Slide>
-            <ImgContainer>
-                <Image src={require('./b.jpg')}/>
-            </ImgContainer>
-            <InfoContainer>
-                <Title>This is title</Title>
-                <Description> This is Description</Description>
-                <Button>Submit</Button>    
-            </InfoContainer>
-            </Slide>
-            <Slide>
-            <ImgContainer>
-                <Image src={require('./a.jpg')}/>
-            </ImgContainer>
-            <InfoContainer>
-                <Title>This is title2</Title>
-                <Description> This is Description2</Description>
-                <Button>Submit</Button>    
-            </InfoContainer>
-            </Slide>
-            <Slide>
-            <ImgContainer>
-                <Image src={require('./c.jpg')}/>
-            </ImgContainer>
-            <InfoContainer>
-                <Title>This is title33</Title>
-                <Description> This is Description3</Description>
-                <Button>Submit</Button>    
-            </InfoContainer>
-            </Slide>   
+        <Wrapper slideIndex={sliderIndex}>
+            {sliderData.map((element)=>{
+                return <>
+                    <Slide>
+                        <ImgContainer>
+                            <Image src={element.image} />
+                        </ImgContainer>
+                        <InfoContainer>
+                            <Title>{(element.title).slice(0,10)}</Title>
+                            <Description>{element.description.slice(0,70)}</Description>
+                            <Button>Submit</Button>
+                        </InfoContainer>
+                    </Slide> 
+                </>
+            })}  
         </Wrapper>
-        <Arrow direction="right">
+        <Arrow direction="right" onClick={()=>handleArrowClick("right")}>
             <ArrowForwardIosOutlinedIcon/>
         </Arrow>
     </Container>
