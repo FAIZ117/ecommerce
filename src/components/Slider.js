@@ -81,35 +81,55 @@ const Description = styled.p`
 `;
 
 const Button = styled.button`
-  padding: 10px;
-  font-size: 20px;
-  background-color: transparent;
-  cursor: pointer;
-  color:black;
-  padding:0;
+
+display: inline-block;
+outline: none;
+cursor: pointer;
+font-size: 14px;
+line-height: 1;
+border-radius: 500px;
+transition-property: background-color,border-color,color,box-shadow,filter;
+transition-duration: .3s;
+border: 1px solid transparent;
+letter-spacing: 2px;
+min-width: 160px;
+text-transform: uppercase;
+white-space: normal;
+font-weight: 700;
+text-align: center;
+padding: 16px 14px 18px;
+color: #616467;
+box-shadow: inset 0 0 0 2px #616467;
+background-color: transparent;
+height: 48px;
+&:hover{
+    color: #fff;
+    background-color: #616467;
+}
+
 `;
 
 
 function Slider() {
     const [sliderIndex,setSliderIndex]=useState(0)
     const[sliderData,setSliderData]=useState([])
-    const[loading,setLoading]=useState(false)
+    //const[loading,setLoading]=useState(false)
     async function getItemList(){
-        setLoading(false) 
+        //setLoading(false) 
         fetch('https://fakestoreapi.com/products?limit=6')
             .then(res=>res.json())
             .then(json=>setSliderData(json))
-        setLoading(true)
+        //setLoading(true)
     };
     useEffect(()=>{
         getItemList()
     },[]);
 
     function handleArrowClick(direction){
-        console.log("clicked")
         let maxResult=sliderData.length;
         /*if(direction==="left"){
-            setSliderIndex(sliderIndex>0?sliderIndex-1:maxResult-1)
+            setSlidercls
+            Index(sliderIndex>0?sliderIndex-1:maxResult-1)
             }else{
             setSliderIndex(sliderIndex<maxResult-1?sliderIndex+1:0) 
             }*/
@@ -129,8 +149,8 @@ function Slider() {
         </Arrow>
         <Wrapper slideIndex={sliderIndex}>
             {sliderData.map((element)=>{
-                return <>
-                    <Slide>
+                return <div key={element.id}>
+                    <Slide >
                         <ImgContainer>
                             <Image src={element.image} />
                         </ImgContainer>
@@ -140,7 +160,7 @@ function Slider() {
                             <Button>Shop Now</Button>
                         </InfoContainer>
                     </Slide> 
-                </>
+                </div>
             })}  
         </Wrapper>
         <Arrow direction="right" onClick={()=>handleArrowClick("right")} style={sliderIndex>=sliderData.length-1?{pointerEvents:"none"}:{pointerEvents:""}} >
