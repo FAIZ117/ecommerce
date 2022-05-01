@@ -42,7 +42,6 @@ function Categories() {
   return (
     <Container>
         {productList.map((item)=>{
-            console.log(item);
             return <CategoryItems key={item.id} items={item}/>
             })}
     </Container>

@@ -9,7 +9,6 @@ const Container=styled.div`
   box-shadow: 1px 1px 5px black;
   position:relative;
 
-
 `
 const Image=styled.img`
   width:100%;
