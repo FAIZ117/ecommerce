@@ -13,15 +13,36 @@ function Categories() {
   const [productCategory, setProductCategory] = useState([]);
   const [productList, setProductList] = useState([]);
 
-  useEffect(() => {
-    getProductCategory();
-  }, []);
- 
-  useEffect(() => {
-    getProductList();
-  }, [productCategory]);
+async function fetchFunc(url){
+  let data= await fetch(url)
+  let parsedData = await data.json()
+  return parsedData
+}
 
-  async function  getProductCategory(){
+async function  getProductCategory(){
+  let data = await fetchFunc("https://fakestoreapi.com/products/categories")
+  setProductCategory(data)
+};
+
+async function getProductList(){
+  let arrPromises = productCategory.map(async (element)=>{
+    let data = await fetchFunc(`https://fakestoreapi.com/products/category/${element}/?limit=1`)
+    return (data[0])
+  })
+  let arr = await Promise.all(arrPromises)
+  setProductList(arr)
+  
+}
+
+useEffect(() => {
+  getProductCategory();
+}, []);
+ 
+useEffect(() => {
+  getProductList();
+}, [productCategory]);
+
+ /* async function  getProductCategory(){
     fetch("https://fakestoreapi.com/products/categories")
       .then((data) => data.json())
       .then((parsedData) => setProductCategory(parsedData));
@@ -37,7 +58,7 @@ function Categories() {
             setProductList([...arr])
         }); 
     });
-  }
+  }*/
 
   return (
     <Container>
